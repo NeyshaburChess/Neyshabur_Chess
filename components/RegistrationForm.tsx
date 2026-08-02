@@ -10,7 +10,6 @@ export default function RegistrationForm() {
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
  
- 
   async function handleSubmit(
     e: React.FormEvent<HTMLFormElement>
   ) {
@@ -24,57 +23,38 @@ export default function RegistrationForm() {
     setLoading(true);
  
     try {
-      const formData = new FormData(
-        e.currentTarget
-      );
+      const formData = new FormData(e.currentTarget);
  
-      formData.append(
-        "receipt",
-        receiptFile
-      );
+      formData.append("receipt", receiptFile);
  
- 
-      const response = await fetch(
-        "/api/register",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
- 
+      const response = await fetch("/api/register", {
+        method: "POST",
+        body: formData,
+      });
  
       const result = await response.json();
  
- 
       if (!response.ok) {
-        console.error(result);
+        console.error("REGISTER ERROR:", result);
  
         alert(
-          result.error ||
-          "خطا در ثبت نام"
+          result.error || "خطا در ثبت نام"
         );
  
         return;
       }
  
- 
       alert("ثبت نام با موفقیت انجام شد");
  
       router.push("/success");
  
- 
     } catch (error) {
+      console.error("SERVER ERROR:", error);
  
-      console.error(error);
- 
-      alert(
-        "خطا در ارتباط با سرور"
-      );
+      alert("خطا در ارتباط با سرور");
  
     } finally {
- 
       setLoading(false);
- 
     }
   }
  
@@ -93,13 +73,11 @@ export default function RegistrationForm() {
         required
       />
  
- 
       <input
         name="fideId"
         placeholder="آیدی فیده"
         className="input"
       />
- 
  
       <input
         name="phone"
@@ -108,7 +86,6 @@ export default function RegistrationForm() {
         required
       />
  
- 
       <input
         name="birthYear"
         type="number"
@@ -116,7 +93,6 @@ export default function RegistrationForm() {
         className="input"
         required
       />
- 
  
       <input
         name="city"
@@ -167,7 +143,8 @@ export default function RegistrationForm() {
  
  
       {receiptFile && (
-        <div className="
+        <div
+          className="
           rounded-xl
           bg-green-100
           border
@@ -175,7 +152,8 @@ export default function RegistrationForm() {
           text-green-700
           text-center
           py-3
-        ">
+          "
+        >
           ✅ فیش انتخاب شد
         </div>
       )}
@@ -185,19 +163,18 @@ export default function RegistrationForm() {
         type="submit"
         disabled={loading}
         className="
-          w-full
-          rounded-xl
-          bg-[#07192F]
-          py-3
-          font-bold
-          text-white
-          disabled:opacity-50
+        w-full
+        rounded-xl
+        bg-[#07192F]
+        py-3
+        font-bold
+        text-white
+        disabled:opacity-50
         "
       >
         {loading
           ? "در حال ثبت..."
-          : "ثبت نام"
-        }
+          : "ثبت نام"}
       </button>
  
     </form>
