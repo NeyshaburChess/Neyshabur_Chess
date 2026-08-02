@@ -2,12 +2,10 @@
  
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import FileDropzone from "./FileDropzone";
  
 export default function RegistrationForm() {
   const router = useRouter();
  
-  const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
  
   async function handleSubmit(
@@ -15,46 +13,60 @@ export default function RegistrationForm() {
   ) {
     e.preventDefault();
  
-    if (!receiptFile) {
-      alert("ابتدا فیش واریزی را انتخاب کنید.");
-      return;
-    }
- 
     setLoading(true);
  
     try {
-      const formData = new FormData(e.currentTarget);
+      const formData = new FormData(
+        e.currentTarget
+      );
  
-      formData.append("receipt", receiptFile);
  
-      const response = await fetch("/api/register", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "/api/register",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+ 
  
       const result = await response.json();
  
+ 
       if (!response.ok) {
-        console.error("REGISTER ERROR:", result);
+        console.error(result);
  
         alert(
-          result.error || "خطا در ثبت نام"
+          result.error ||
+          "خطا در ثبت نام"
         );
  
         return;
       }
  
-      alert("ثبت نام با موفقیت انجام شد");
+ 
+      alert(
+        "ثبت نام با موفقیت انجام شد"
+      );
  
       router.push("/success");
  
-    } catch (error) {
-      console.error("SERVER ERROR:", error);
  
-      alert("خطا در ارتباط با سرور");
+    } catch (error) {
+ 
+      console.error(
+        "FETCH ERROR:",
+        error
+      );
+ 
+      alert(
+        "خطا در ارتباط با سرور"
+      );
  
     } finally {
+ 
       setLoading(false);
+ 
     }
   }
  
@@ -73,11 +85,13 @@ export default function RegistrationForm() {
         required
       />
  
+ 
       <input
         name="fideId"
         placeholder="آیدی فیده"
         className="input"
       />
+ 
  
       <input
         name="phone"
@@ -86,6 +100,7 @@ export default function RegistrationForm() {
         required
       />
  
+ 
       <input
         name="birthYear"
         type="number"
@@ -93,6 +108,7 @@ export default function RegistrationForm() {
         className="input"
         required
       />
+ 
  
       <input
         name="city"
@@ -107,17 +123,24 @@ export default function RegistrationForm() {
         defaultValue=""
         required
       >
-        <option value="" disabled>
+ 
+        <option
+          value=""
+          disabled
+        >
           انتخاب مسابقه
         </option>
+ 
  
         <option value="ششمین دوره مسابقات قهرمانان شطرنج نیشابور">
           ششمین دوره مسابقات قهرمانان شطرنج نیشابور
         </option>
  
+ 
         <option value="هفتمین دوره مسابقات قهرمانان شطرنج نیشابور">
           هفتمین دوره مسابقات قهرمانان شطرنج نیشابور
         </option>
+ 
  
         <option value="هر دو">
           ثبت نام هر دو دوره
@@ -135,30 +158,6 @@ export default function RegistrationForm() {
       />
  
  
-      <FileDropzone
-        onUpload={async (file: File) => {
-          setReceiptFile(file);
-        }}
-      />
- 
- 
-      {receiptFile && (
-        <div
-          className="
-          rounded-xl
-          bg-green-100
-          border
-          border-green-300
-          text-green-700
-          text-center
-          py-3
-          "
-        >
-          ✅ فیش انتخاب شد
-        </div>
-      )}
- 
- 
       <button
         type="submit"
         disabled={loading}
@@ -172,10 +171,14 @@ export default function RegistrationForm() {
         disabled:opacity-50
         "
       >
-        {loading
-          ? "در حال ثبت..."
-          : "ثبت نام"}
+        {
+          loading
+            ? "در حال ثبت..."
+            : "ثبت نام"
+        }
+ 
       </button>
+ 
  
     </form>
   );
