@@ -3,61 +3,63 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
  
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
  
-    const {
+    console.log("REGISTER START");
+ 
+    const formData = await req.formData();
+ 
+    console.log("FORM RECEIVED");
+ 
+ 
+    const fullName = String(formData.get("fullName") || "");
+    const phone = String(formData.get("phone") || "");
+ 
+    console.log({
       fullName,
-      fideId,
-      phone,
-      birthYear,
-      city,
-      tournamentName,
-      amount,
-      receiptUrl,
-    } = body;
+      phone
+    });
  
-    const { data, error } = await supabaseAdmin
+ 
+    const { error } = await supabaseAdmin
       .from("registrations")
       .insert({
         fullName,
-        fideId,
         phone,
-        birthYear: Number(birthYear),
-        city,
-        tournamentName,
-        amount: Number(amount),
-        receiptUrl,
-        status: "pending",
-        adminNote: "",
-      })
-      .select()
-      .single();
+      });
+ 
  
     if (error) {
-      console.error("DATABASE ERROR:", error);
+      console.error("SUPABASE ERROR:", error);
  
       return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
+        {
+          error: error.message
+        },
+        {
+          status:500
+        }
       );
     }
  
+ 
     return NextResponse.json({
-      success: true,
-      data,
+      success:true
     });
  
-  } catch (error: any) {
-    console.error("REGISTER ERROR:", error);
+ 
+  } catch(error:any){
+ 
+    console.error("SERVER ERROR:", error);
  
     return NextResponse.json(
       {
-        error: error.message || "خطای سرور",
+        error:error.message
       },
       {
-        status: 500,
+        status:500
       }
     );
+ 
   }
 }
  
